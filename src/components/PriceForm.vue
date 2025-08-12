@@ -20,7 +20,13 @@ const numberOfWeeksError = ref("")
 const df = new DateFormatter("en-US", { dateStyle: "long" })
 
 watch(numberOfWeeks, (newVal) => {
-  numberOfWeeksError.value = newVal <= 0 ? "Number of weeks must be positive." : ""
+  if (newVal <= 0) {
+    numberOfWeeksError.value = "Number of weeks must be positive."
+  } else if (newVal > 52) {
+    numberOfWeeksError.value = "Number of weeks cannot exceed 52."
+  } else {
+    numberOfWeeksError.value = ""
+  }
 })
 
 const handleSubmit = () => {
@@ -48,6 +54,7 @@ const handleSubmit = () => {
         type="number"
         v-model.number="numberOfWeeks"
         :min="1"
+        :max="52"
         :disabled="store.calculatingPrice"
       />
       <p v-if="numberOfWeeksError" class="text-red-500 text-sm">
